@@ -110,17 +110,21 @@ impl Game {
 mod tests {
     use super::*;
 
-    const input: &str = "A Y\nB X\nC Z";
+    const INPUT: &str = "\
+        A Y\n\
+        B X\n\
+        C Z\
+    ";
 
     #[test]
     fn calculate_game_score_by_guess_strategy() {
-        let game = Game::new(input, &GameRound::parse_by_guess);
+        let game = Game::new(INPUT, &GameRound::parse_by_guess);
         assert_eq!(game.calculate_game_score(), 15);
     }
 
     #[test]
     fn calculate_game_score_by_correct_strategy() {
-        let game = Game::new(input, &GameRound::parse_correctly);
+        let game = Game::new(INPUT, &GameRound::parse_correctly);
         assert_eq!(game.calculate_game_score(), 12);
     }
 }
