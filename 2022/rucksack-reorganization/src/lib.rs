@@ -1,19 +1,45 @@
-use std::collections::HashSet;
+use std::collections::{HashSet, HashMap};
 
 pub fn calculate_dupe_items_priority(input: &str) -> u32 {
     input
-        .split('\n')
+        .lines()
         .map(|items| items.split_at(items.len() / 2))
-        .filter_map(|(left, right)| {
-            let left_set: HashSet<char> = left.chars().collect();
-            right.chars().find(|c| left_set.contains(c))
-        })
+        .filter_map(|(left, right)| left.chars().find(|item| right.contains(*item)))
         .map(get_item_priority)
         .sum()
 }
 
 pub fn calculate_badges_priority(input: &str) -> u32 {
-    0
+    let rucksack_groups = input
+        .lines()
+        .map(|rucksack| {
+            let unique_items = rucksack.chars().collect::<HashSet<char>>();
+            Vec::from_iter(unique_items).iter().collect::<String>()
+        })
+        .enumerate()
+        .fold(Vec::<String>::new(), |mut groups, (index, rucksack)| {
+            if let Some(group) = groups.get_mut(index / 3) {
+                group.push_str(&rucksack);
+            } else {
+                groups.push(rucksack.to_owned());
+            }
+
+            groups
+        });
+
+    rucksack_groups
+        .iter()
+        .filter_map(|group| {
+            group.chars().fold(HashMap::new(), |mut items_count, item| {
+                *items_count.entry(item).or_insert(0) += 1;
+                items_count
+            })
+            .iter()
+            .find(|(_, &count)| count == 3)
+            .map(|(key, _)| *key)
+        })
+        .map(get_item_priority)
+        .sum()
 }
 
 fn get_item_priority(item: char) -> u32 {
