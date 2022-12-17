@@ -91,7 +91,7 @@ pub struct Game {
 impl Game {
     pub fn new(round_codes: &str, parse: &dyn Fn(&str) -> GameRound) -> Self {
         let rounds = round_codes
-            .split('\n')
+            .lines()
             .map(parse)
             .collect();
         

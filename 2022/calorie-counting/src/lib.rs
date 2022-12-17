@@ -24,6 +24,6 @@ impl CalorieCounter {
     }
 
     pub fn sum_top_elf_load_calories(&self, n: usize) -> u32 {
-        self.calories.iter().take(n).sum::<u32>()
+        self.calories.iter().take(n).sum()
     }
 }

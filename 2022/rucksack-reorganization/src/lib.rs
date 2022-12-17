@@ -1,4 +1,4 @@
-use std::collections::{HashSet, HashMap};
+#![feature(iter_array_chunks)]
 
 pub fn calculate_dupe_items_priority(input: &str) -> u32 {
     input
@@ -10,34 +10,12 @@ pub fn calculate_dupe_items_priority(input: &str) -> u32 {
 }
 
 pub fn calculate_badges_priority(input: &str) -> u32 {
-    let rucksack_groups = input
+    input
         .lines()
-        .map(|rucksack| {
-            let unique_items = rucksack.chars().collect::<HashSet<char>>();
-            Vec::from_iter(unique_items).iter().collect::<String>()
-        })
-        .enumerate()
-        .fold(Vec::<String>::new(), |mut groups, (index, rucksack)| {
-            if let Some(group) = groups.get_mut(index / 3) {
-                group.push_str(&rucksack);
-            } else {
-                groups.push(rucksack.to_owned());
-            }
-
-            groups
-        });
-
-    rucksack_groups
-        .iter()
-        .filter_map(|group| {
-            group.chars().fold(HashMap::new(), |mut items_count, item| {
-                *items_count.entry(item).or_insert(0) += 1;
-                items_count
-            })
-            .iter()
-            .find(|(_, &count)| count == 3)
-            .map(|(key, _)| *key)
-        })
+        .array_chunks::<3>()
+        .filter_map(|[a, b, c]| a.chars().find(|item| {
+            b.contains(*item) && c.contains(*item)
+        }))
         .map(get_item_priority)
         .sum()
 }
