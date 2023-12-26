@@ -12,7 +12,7 @@ fn get_calibration_value(input: &str) -> u32 {
         .trim()
         .lines()
         .map(|line| {
-            let digits = parser(line).unwrap().1;
+            let digits = parser(line);
             let first = digits.first().unwrap();
             let last = digits.last().unwrap();
 
