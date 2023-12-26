@@ -23,12 +23,12 @@ pub fn count_overlapping_assignments(input: &str) -> usize {
 
 type AssignmentRange = RangeInclusive<u32>;
 
-trait Intersectionable {
+trait Intersectional {
     fn includes(&self, other: &Self) -> bool;
     fn overlaps(&self, other: &Self) -> bool;
 }
 
-impl Intersectionable for AssignmentRange {
+impl Intersectional for AssignmentRange {
     fn includes(&self, other: &Self) -> bool {
         self.contains(other.start()) && self.contains(other.end())
     }
